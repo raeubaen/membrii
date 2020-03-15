@@ -44,6 +44,7 @@ $header-height: 96px !default;
   &__brand {
     display: block;
     line-height: 1.4;
+    color: $c-white;
     @extend %t-brand;
   }
 

@@ -1,21 +1,21 @@
 
 $c-white: #ffffff;
 $c-black: #000000;
-$c-red: #ff6940;
+$c-red: #ff0000;
 $c-blue: #00b1d1;
 
-$c-primary: $c-blue;
-$c-interactive: $c-blue;
+$c-primary: $c-red;
+$c-interactive: $c-red;
 
-$c-background: $c-white;
-$c-background-shaded: #f2f4f6;
+$c-background: $c-black;
+$c-background-shaded: $c-black;
 
 $c-line: #e3e8ec;
 $c-line-error: $c-red;
 
-$c-text: #272727;
+$c-text: $c-black;
 $c-text-detail: #90999e;
-$c-text-primary: #00a3cc;
+$c-text-primary: $c-red;
 $c-text-error: $c-red;
 
 $c-footer-text: #8898aa;
@@ -24,7 +24,7 @@ $c-field-control-background: #e3e7ec;
 $c-field-label: $c-text-detail;
 
 $c-pipe: $c-primary;
-$c-pipe-background: $c-background-shaded;
+$c-pipe-background: $c-black;
 
 $c-viewer: $c-primary;
 $c-encoder: #ff9900;
