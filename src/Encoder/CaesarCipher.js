@@ -9,7 +9,8 @@ const meta = {
   type: 'encoder'
 }
 
-const defaultAlphabet = 'abcdefghijklmnopqrstuvwxyz'
+const englishAlphabet = 'abcdefghijklmnopqrstuvwxyz'
+const italianAlphabet = 'abcdefghilmnopqrstuvz'
 const defaultShift = 7
 
 /**
@@ -41,9 +42,18 @@ export default class CaesarCipherEncoder extends Encoder {
         randomizeValue: this.randomizeShiftValue.bind(this)
       },
       {
+        name: 'language',
+        type: 'enum',
+        value: 'english',
+        elements: ['english', 'italian', 'other'],
+        labels: ['English', 'Italian', 'Other'],
+        width: 6,
+        randomizable: false
+      },
+      {
         name: 'alphabet',
         type: 'text',
-        value: defaultAlphabet,
+        value: englishAlphabet,
         uniqueChars: true,
         minLength: 2,
         caseSensitivity: false,
@@ -145,6 +155,17 @@ export default class CaesarCipherEncoder extends Encoder {
       case 'alphabet':
         // The shift value description depends on the alphabet and thus needs
         // to be updated when the alphabet changes
+        this.getSetting('shift').setNeedsValueDescriptionUpdate();
+        break
+      case 'language':
+        new_language = this.getSetting('language').getValue();
+        if (new_language == "english") {
+          this.getSetting('alphabet').setValue(englishAlphabet)
+        }
+        else if (new_language == "italian") {
+          console.log("italian");
+          this.getSetting('alphabet').setValue(italianAlphabet)
+        }
         this.getSetting('shift').setNeedsValueDescriptionUpdate()
         break
     }
