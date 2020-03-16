@@ -156,13 +156,15 @@ export default class CaesarCipherEncoder extends Encoder {
         // The shift value description depends on the alphabet and thus needs
         // to be updated when the alphabet changes
         this.getSetting('shift').setNeedsValueDescriptionUpdate();
+        if (value != englishAlphabet && value != italianAlphabet){
+          this.getSetting("language").setValue("other")
+        }
         break
       case 'language':
-        new_language = this.getSetting('language').getValue();
-        if (new_language == "english") {
+        if (value == "english") {
           this.getSetting('alphabet').setValue(englishAlphabet)
         }
-        else if (new_language == "italian") {
+        else if (value == "italian") {
           console.log("italian");
           this.getSetting('alphabet').setValue(italianAlphabet)
         }

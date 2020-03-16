@@ -8,6 +8,9 @@ const meta = {
   type: 'encoder'
 }
 
+
+const englishAlphabet = 'abcdefghijklmnopqrstuvwxyz'
+const italianAlphabet = 'abcdefghilmnopqrstuvz'
 /**
  * Encoder brick for the letter number cipher (A1Z26) encoding and decoding
  */
@@ -27,6 +30,15 @@ export default class A1Z26Encoder extends CharacterBlockEncoder {
     super()
     this.addSettings([
       {
+        name: 'language',
+        type: 'enum',
+        value: 'english',
+        elements: ['english', 'italian', 'other'],
+        labels: ['English', 'Italian', 'Other'],
+        width: 6,
+        randomizable: false
+      },
+      {
         name: 'alphabet',
         type: 'text',
         value: 'abcdefghijklmnopqrstuvwxyz',
@@ -40,6 +52,33 @@ export default class A1Z26Encoder extends CharacterBlockEncoder {
         randomizable: false
       }
     ])
+  }
+
+
+/**
+   * Triggered when a setting field has changed.
+   * @param {Field} setting Sender setting field
+   * @param {mixed} value New field value
+   */
+  settingValueDidChange (setting, value) {
+    switch (setting.getName()) {
+      case 'alphabet':
+        // The shift value description depends on the alphabet and thus needs
+        // to be updated when the alphabet changes
+        if (value != englishAlphabet && value != italianAlphabet){
+          this.getSetting("language").setValue("other")
+        }
+        break
+      case 'language':
+        if (value == "english") {
+          this.getSetting('alphabet').setValue(englishAlphabet)
+        }
+        else if (value == "italian") {
+          console.log("italian");
+          this.getSetting('alphabet').setValue(italianAlphabet)
+        }
+        break
+    }
   }
 
   /**

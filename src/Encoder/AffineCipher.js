@@ -9,8 +9,10 @@ const meta = {
   type: 'encoder'
 }
 
-const defaultAlphabet = 'abcdefghijklmnopqrstuvwxyz'
 
+const englishAlphabet = 'abcdefghijklmnopqrstuvwxyz'
+const italianAlphabet = 'abcdefghilmnopqrstuvz'
+const defaultAlphabet = englishAlphabet
 /**
  * Encoder brick for Affine Cipher encoding and decoding
  */
@@ -53,6 +55,15 @@ export default class AffineCipherEncoder extends Encoder {
         min: 1,
         randomizeValue: this.randomizeInterceptValue.bind(this),
         width: 6
+      },
+      {
+        name: 'language',
+        type: 'enum',
+        value: 'english',
+        elements: ['english', 'italian', 'other'],
+        labels: ['English', 'Italian', 'Other'],
+        width: 6,
+        randomizable: false
       },
       {
         name: 'alphabet',
@@ -162,9 +173,21 @@ export default class AffineCipherEncoder extends Encoder {
       case 'alphabet':
         // Changing the alphabet setting value can invalidate the slope setting
         this.getSetting('a').revalidateValue()
+        if (value != englishAlphabet && value != italianAlphabet){
+          this.getSetting("language").setValue("other")
+        }
         break
       case 'caseStrategy':
         this.getSetting('alphabet').setCaseSensitivity(value === 'strict')
+        break
+      case 'language':
+        if (value == "english") {
+          this.getSetting('alphabet').setValue(englishAlphabet)
+        }
+        else if (value == "italian") {
+          console.log("italian");
+          this.getSetting('alphabet').setValue(italianAlphabet)
+        }
         break
     }
   }

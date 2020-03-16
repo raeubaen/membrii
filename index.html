@@ -9,10 +9,12 @@
 
     <!-- Style -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500%7CSource+Code+Pro:400&amp;subset=latin-ext">
-    <link rel="stylesheet" href="dist/style/cryptii.css">
+    {% load static %}
+    <link rel="stylesheet" href=" {% static 'style/cryptii.css' %}">
 
     <!-- Script -->
-    <script async src="dist/script/cryptii.js" data-cryptii-init></script>
+    {% load static %}
+    <script async src=" {% static 'script/cryptii.js' %} " data-cryptii-init></script>
     <!--
     <script type="application/json" data-cryptii-config>
       {

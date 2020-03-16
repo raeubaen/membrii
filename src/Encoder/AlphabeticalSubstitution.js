@@ -5,12 +5,14 @@ import ArrayUtil from '../ArrayUtil'
 
 const meta = {
   name: 'alphabetical-substitution',
-  title: 'Alphabetical substitution',
+  title: 'Atbash/Generic substitution',
   category: 'Ciphers',
   type: 'encoder'
 }
 
-const defaultPlaintextAlphabet = 'abcdefghijklmnopqrstuvwxyz'
+const englishAlphabet = 'abcdefghijklmnopqrstuvwxyz'
+const italianAlphabet = 'abcdefghilmnopqrstuvz'
+const defaultPlaintextAlphabet = englishAlphabet
 const defaultCiphertextAlphabet = 'zyxwvutsrqponmlkjihgfedcba'
 
 /**
@@ -31,6 +33,14 @@ export default class AlphabeticalSubstitutionEncoder extends Encoder {
   constructor () {
     super()
     this.addSettings([
+      {
+        name: 'plaintextLanguage',
+        type: 'enum',
+        value: 'english',
+        elements: ['english', 'italian', 'other'],
+        labels: ['English', 'Italian', 'Other'],
+        randomizable: false
+      },
       {
         name: 'plaintextAlphabet',
         type: 'text',
@@ -147,9 +157,19 @@ export default class AlphabeticalSubstitutionEncoder extends Encoder {
       case 'plaintextAlphabet':
         // The validity of the ciphertext alphabet depends
         // on the plaintext alphabet
-        this.getSetting('ciphertextAlphabet').revalidateValue()
+        if (value != englishAlphabet && value != italianAlphabet){
+          this.getSetting("plaintextLanguage").setValue("other")
+        }
+        this.getSetting('ciphertextAlphabet').setValue(value.split('').reverse( ).join(''))
         break
-
+      case 'plaintextLanguage':
+        if (value == "english") {
+          this.getSetting('plaintextAlphabet').setValue(englishAlphabet)
+        }
+        else if (value == "italian") {
+          this.getSetting('plaintextAlphabet').setValue(italianAlphabet);
+        }
+        break
       case 'caseStrategy':
         this.getSetting('plaintextAlphabet')
           .setCaseSensitivity(value === 'strict')
