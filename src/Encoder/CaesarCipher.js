@@ -42,11 +42,21 @@ export default class CaesarCipherEncoder extends Encoder {
         randomizeValue: this.randomizeShiftValue.bind(this)
       },
       {
+        name: 'crack',
+        type: 'boolean',
+        label: 'Crack',
+        value: false,
+        trueLabel: 'Yes',
+        falseLabel: 'No',
+        randomizable: false
+      },
+      {
         name: 'language',
         type: 'enum',
         value: 'english',
         elements: ['english', 'italian', 'other'],
         labels: ['English', 'Italian', 'Other'],
+        blackChoiceList: [],
         width: 6,
         randomizable: false
       },
@@ -165,10 +175,17 @@ export default class CaesarCipherEncoder extends Encoder {
           this.getSetting('alphabet').setValue(englishAlphabet)
         }
         else if (value == "italian") {
-          console.log("italian");
           this.getSetting('alphabet').setValue(italianAlphabet)
         }
         this.getSetting('shift').setNeedsValueDescriptionUpdate()
+        break
+      case 'crack':
+        if (value) {
+          this.getSetting('language').setBlackChoiceList(['other'])
+        }
+        if (!value) {
+          this.getSetting('language').setBlackChoiceList([])
+        }
         break
     }
   }

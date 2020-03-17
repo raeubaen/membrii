@@ -14,6 +14,7 @@ export default class EnumField extends Field {
    * @param {string[]} [spec.labels] Value labels
    * @param {string[]} [spec.descriptions] Value descriptions
    * @param {string} [spec.style="default"] Field appearance
+   * @param {string[]} [spec.blackChoiceList=[]]
    */
   constructor (name, spec) {
     super(name, spec)
@@ -23,6 +24,7 @@ export default class EnumField extends Field {
     this._labels = []
     this._descriptions = []
     this._style = spec.style || 'default'
+    this._blackChoiceList = spec.blackChoiceList || []
 
     this.setElements(
       spec.elements,
@@ -148,6 +150,20 @@ export default class EnumField extends Field {
     return this
   }
 
+  getBlackChoiceList () {
+    return this._blackChoiceList
+  }
+
+  /**
+   * Sets the field appearance.
+   * @param {string[]} blackChoiceList
+   * @return {EnumField} Fluent interface
+   */
+  setBlackChoiceList (blackChoiceList, revalidate = true) {
+    this._blackChoiceList = blackChoiceList
+    return revalidate ? this.revalidateValue() : this
+  }
+  
   /**
    * Validates given raw value.
    * @param {mixed} rawValue Value to be validated
@@ -158,6 +174,12 @@ export default class EnumField extends Field {
       return {
         key: 'enumNotInHaystack',
         message: `The value must be occur in the list of elements`
+      }
+    }
+    if (this._blackChoiceList.includes(rawValue)){
+      return {
+        key: this.name,
+        message: `Chosen option is not compatible with other settings`
       }
     }
     return super.validateValue(rawValue)
