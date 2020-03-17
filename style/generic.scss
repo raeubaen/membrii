@@ -108,3 +108,22 @@ a {
 img {
   width: 100%;
 }
+
+//needed for crack results page - does not affect the rest
+table{
+  border-collapse: separate;
+    border-spacing: 50pt 0;
+  color: white;
+  margin: 20pt;
+  font-size: 12pt;
+}
+#guesses div.bar {
+  height: 1em;
+  background: #a30000;
+}
+#guesses tr.active {
+  font-weight: bold;
+}
+#guesses tr.active div.bar {
+  background: #ff0000;
+}

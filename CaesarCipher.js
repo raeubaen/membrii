@@ -212,8 +212,6 @@ export default class CaesarCipherEncoder extends Encoder {
         else {
           this.getSetting('language').setBlackChoiceList([])
         }
-        div = document.getElementById("crack-results")
-	      div.innerHTML = ""
         break
     }
   }

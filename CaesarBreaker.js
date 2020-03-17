@@ -19,56 +19,18 @@ export function bestShiftCrack(content, language, trialsDict) {
 			return x[0] - y[0];
 	});
 
+	var w = window.open("entropies.html");
 	Storage.prototype.setObj = function(key, obj) {
 		return this.setItem(key, JSON.stringify(obj))
 	}
-	Storage.prototype.getObj = function(key) {
-		return JSON.parse(this.getItem(key))
-	}
-
+	localStorage.setObj("entropies", entropies)
+	trials = {}
 	alph_len = language == "english" ? 26 : 21;
 	for (var i=0; i<alph_len; i++) {
-		trialsDict[i] = stringFromCodeArray(trialsDict[i])
+		trials[i] = stringFromCodeArray(trialsDict[i])
 	}
+	localStorage.setObj("trials", trials)
 
-	div = document.getElementById("crack-results")
-	div.innerHTML = `
-	<table>
-	<thead>
-		<tr>
-			<th>Shift</th>
-			<th colspan="2">Entropy per letter (bits) <span style="font-weight:normal">(lower is better)</span></th>
-			<th colspan="2">Beginning of deciphered text </th>
-		</tr>
-	</thead>
-	<tbody id="guesses"></tbody>
-	</table>
-	`
-	
-	var guessesElem = document.getElementById("guesses");
-	entropies.forEach(function(item, index) {
-		maxEntropy = entropies[entropies.length - 1][1];
-		minEntropy = entropies[0][1];
-		var tr = guessesElem.appendChild(document.createElement("tr"));
-		if (index == 0)
-			tr.classList.add("active");
-		var td = tr.appendChild(document.createElement("td"));
-		td.textContent = item[0].toString();
-		
-		td = tr.appendChild(document.createElement("td"));
-		td.textContent = item[1].toFixed(3);
-		
-		td = tr.appendChild(document.createElement("td"));
-		var div = td.appendChild(document.createElement("div"));
-		div.classList.add("bar");
-		div.style.width = ((item[1] - minEntropy) / maxEntropy * 30 + 1).toFixed(6) + "em";
-		
-		td = tr.appendChild(document.createElement("td"));
-		td.textContent = trialsDict[item[0]];
-	});
-
-	window.scrollTo(0, document.body.scrollHeight);
-	
 	// Decrypt using lowest entropy shift
 	var bestShift = entropies[0][0];
 	return bestShift;
