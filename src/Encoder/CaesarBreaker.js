@@ -36,6 +36,9 @@ export function bestShiftCrack(trialsDict, language, alphabet) {
 	</thead>
 	<tbody id="guesses"></tbody>
 	</table>
+	<table>
+	<tbody style="text-align: center"><tr><td>To change the shift, say 'No' to Need Crack</td></tr></tbody>
+	</table>
 	`
 	
 	var guessesElem = document.getElementById("guesses");
