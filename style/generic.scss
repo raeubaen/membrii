@@ -112,10 +112,14 @@ img {
 //needed for crack results page - does not affect the rest
 table{
   border-collapse: separate;
-    border-spacing: 50pt 0;
+  border-spacing: 50pt 0;
   color: white;
   margin: 20pt;
   font-size: 12pt;
+  font-family: Roboto, sans-serif;
+}
+thead{
+  font-size: 14pt;
 }
 #guesses div.bar {
   height: 1em;
@@ -123,6 +127,7 @@ table{
 }
 #guesses tr.active {
   font-weight: bold;
+  font-style: italic;
 }
 #guesses tr.active div.bar {
   background: #ff0000;
