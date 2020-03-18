@@ -58,7 +58,7 @@ export default class CaesarCipherEncoder extends Encoder {
         value: 'english',
         elements: ['english', 'italian'],
         labels: ['English', 'Italian'],
-        width: 6,
+        width: 4,
         randomizable: false
       },
 
@@ -70,7 +70,7 @@ export default class CaesarCipherEncoder extends Encoder {
         elements: ['english', 'italian', 'other'],
         labels: ['English', 'Italian', 'Other'],
         blackChoiceList: [],
-        width: 6,
+        width: 8,
         randomizable: false
       },
       {
