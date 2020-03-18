@@ -8,14 +8,13 @@ function stringFromCodeArray(array) {
 	return str
 }
 
-export function bestShiftCrack(trialsDict, language, alphabet) {
-
+export function bestShiftCrack(trialsDict, crackLanguage, alphabet) {
 
 	for (var i=0; i<alphabet.length; i++) {
 		trialsDict[i] = stringFromCodeArray(trialsDict[i])
 	}
 
-	entropies = getAllEntropies(trialsDict, language, alphabet);
+	entropies = getAllEntropies(trialsDict, crackLanguage, alphabet);
 	entropies.sort(function(x, y) {
 		// Compare by lowest entropy, break ties by lowest shift
 		if (x[1] != y[1])
@@ -71,15 +70,18 @@ export function bestShiftCrack(trialsDict, language, alphabet) {
 }
 
 // Unigram model frequencies for letters A, B, ..., Z
-var ENGLISH_FREQS = [
-	0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015, 0.06094, 0.06966, 0.00153, 0.00772, 0.04025, 0.02406,
-	0.06749, 0.07507, 0.01929, 0.00095, 0.05987, 0.06327, 0.09056, 0.02758, 0.00978, 0.02360, 0.00150, 0.01974, 0.00074,
-];
+var ENGLISH_FREQS = {
+	"a": 0.08167, "b": 0.01492, "c": 0.02782, "d": 0.04253, "e": 0.12702, "f": 0.02228, "g": 0.02015, "h": 0.06094,
+        "i": 0.06966, "j": 0.00153, "k": 0.00772, "l": 0.04025, "m": 0.02406, "n": 0.06749, "o": 0.07507, "p": 0.01929,
+        "q": 0.00095, "r": 0.05987, "s": 0.06327, "t": 0.09056, "u": 0.02758, "v": 0.00978, "w": 0.02360, "x": 0.00150,
+        "y": 0.01974, "z": 0.00074,
+};
 
-var ITALIAN_FREQS = [
-	0.11740, 0.00920, 0.04500, 0.03730, 0.11790, 0.00950, 0.01640, 0.01540, 0.11280, 0.06510, 0.02510, 0.06880, 0.09830, 
-	0.03050, 0.00510, 0.06370, 0.04980, 0.05620, 0.03010, 0.02100, 0.00490,
-];
+var ITALIAN_FREQS = {
+	"a": 0.11740, "b": 0.00920, "c": 0.04500, "d": 0.03730, "e": 0.11790, "f": 0.00950, "g": 0.01640, "h": 0.01540,
+        "i": 0.11280, "l": 0.06510, "m": 0.02510, "n": 0.06880, "o": 0.09830, "p": 0.03050, "q": 0.00510, "r": 0.06370,
+        "s": 0.04980, "t": 0.05620, "u": 0.03010, "v": 0.02100, "z": 0.00490,
+};
 
 // Returns the cross-entropy of the given string with respect to the unigram frequencies, which is a positive floating-point number.
 function getEntropy(str, language, alphabet) {
@@ -91,16 +93,12 @@ function getEntropy(str, language, alphabet) {
 		var FREQS = ITALIAN_FREQS
 	//it is due to the programmer not having language different from english or italian
 	for (var i = 0; i < str.length; i++) {
-		var c = str[i].toLowerCase();
-		console.log(c)
-		letter_num = alphabet.indexOf(c); // a is 0
-		console.log(letter_num)
-		if (letter_num != -1)
-			sum += Math.log(FREQS[letter_num]);
+		var freq = FREQS[str[i].toLowerCase()];
+		if (freq !== undefined)
+			sum += Math.log(freq);
 		else
 			ignored++;
 	}
-	console.log(sum)
 	return -sum / Math.log(2) / (str.length - ignored);
 }
 

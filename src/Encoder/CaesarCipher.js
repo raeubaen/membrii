@@ -52,7 +52,19 @@ export default class CaesarCipherEncoder extends Encoder {
         randomizable: false
       },
       {
+        name: 'crackLanguage',
+        label: 'Written in',
+        type: 'enum',
+        value: 'english',
+        elements: ['english', 'italian'],
+        labels: ['English', 'Italian'],
+        width: 6,
+        randomizable: false
+      },
+
+      {
         name: 'language',
+        label: 'Ciphertext Alphabet',
         type: 'enum',
         value: 'english',
         elements: ['english', 'italian', 'other'],
@@ -165,13 +177,13 @@ export default class CaesarCipherEncoder extends Encoder {
    */
   performTranslate (content, isEncode) {
     if (this.getSettingValue('crack') & !isEncode) {
-      language = this.getSettingValue('language');
+      crackLanguage = this.getSettingValue('crackLanguage');
       trialsDict = {}
       alphabet = this.getSettingValue('alphabet')._string
       for (var i=0; i<alphabet.length; i++) {
-        trialsDict[i] = this._performTranslate(content, isEncode, i).slice(0, 20)
+        trialsDict[i] = this._performTranslate(content, isEncode, i).slice(0, 40)
       }
-      bestShift = bestShiftCrack(trialsDict, language, alphabet);
+      bestShift = bestShiftCrack(trialsDict, crackLanguage, alphabet);
       this.getSetting('shift').setValue(bestShift)
     }
     return this._performTranslate(content, isEncode)
