@@ -176,7 +176,8 @@ export default class CaesarCipherEncoder extends Encoder {
    * @return {number[]|string|Uint8Array|Chain} Resulting content
    */
   performTranslate (content, isEncode) {
-    if (this.getSettingValue('crack') & !isEncode) {
+    let crack = this.getSettingValue('crack')
+    if (crack & !isEncode) {
       crackLanguage = this.getSettingValue('crackLanguage');
       trialsDict = {}
       alphabet = this.getSettingValue('alphabet')._string
@@ -184,8 +185,10 @@ export default class CaesarCipherEncoder extends Encoder {
         trialsDict[i] = this._performTranslate(content, isEncode, i).slice(0, 40)
       }
       bestShift = bestShiftCrack(trialsDict, crackLanguage, alphabet);
-      this.getSetting('shift').setValue(bestShift)
+      this.setSettingValue('shift', bestShift)
     }
+    if (crack & isEncode)
+      this.setSettingValue('crack', false)
     return this._performTranslate(content, isEncode)
   }
 
@@ -205,27 +208,39 @@ export default class CaesarCipherEncoder extends Encoder {
         // to be updated when the alphabet changes
         this.getSetting('shift').setNeedsValueDescriptionUpdate();
         if (value != englishAlphabet && value != italianAlphabet){
-          this.getSetting("language").setValue("other")
+          this.setSettingValue("language", "other")
         }
         break
       case 'language':
         if (value == "english") {
-          this.getSetting('alphabet').setValue(englishAlphabet)
+          this.setSettingValue('alphabet', englishAlphabet)
         }
         else if (value == "italian") {
-          this.getSetting('alphabet').setValue(italianAlphabet)
+          this.setSettingValue('alphabet', italianAlphabet)
         }
         this.getSetting('shift').setNeedsValueDescriptionUpdate()
         break
       case 'crack':
         if (value) {
-          this.getSetting('language').setBlackChoiceList(['other'])
+          let arrow = document.getElementById("bouncing-arrow")
+          if (arrow == undefined) {
+            let pipe__scrollable = document.getElementsByClassName("pipe__scrollable")[0]
+            arrow = document.createElement("div")
+            arrow.classList.add("arrow", "bounce")
+            arrow.id = "bouncing-arrow"
+	    arrow.style.visibility = "visible"
+            pipe__scrollable.appendChild(arrow)
+          }
+          else {
+            arrow.style.visibility = "visible"
+          }
         }
         else {
-          this.getSetting('language').setBlackChoiceList([])
+          document.getElementById("crack-results").innerHTML = ""
+          let arrow = document.getElementById("bouncing-arrow")
+          if (arrow !== null)
+            arrow.style.visibility = "hidden"
         }
-        div = document.getElementById("crack-results")
-	      div.innerHTML = ""
         break
     }
   }

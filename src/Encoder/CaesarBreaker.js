@@ -1,4 +1,3 @@
-var entropies;
 
 function stringFromCodeArray(array) {
 	str = ""
@@ -14,7 +13,7 @@ export function bestShiftCrack(trialsDict, crackLanguage, alphabet) {
 		trialsDict[i] = stringFromCodeArray(trialsDict[i])
 	}
 
-	entropies = getAllEntropies(trialsDict, crackLanguage, alphabet);
+	let entropies = getAllEntropies(trialsDict, crackLanguage, alphabet);
 	entropies.sort(function(x, y) {
 		// Compare by lowest entropy, break ties by lowest shift
 		if (x[1] != y[1])
@@ -35,11 +34,9 @@ export function bestShiftCrack(trialsDict, crackLanguage, alphabet) {
 	</thead>
 	<tbody id="guesses"></tbody>
 	</table>
-	<table>
-	<tbody style="text-align: center"><tr><td>To change the shift, say 'No' to Need Crack</td></tr></tbody>
-	</table>
+	<table><tbody style="text-align: center"><tr><td>To change the shift, say 'No' to Need Crack</td></tr></tbody></table>
 	`
-	
+
 	var guessesElem = document.getElementById("guesses");
 	entropies.forEach(function(item, index) {
 		maxEntropy = entropies[entropies.length - 1][1];
@@ -49,21 +46,21 @@ export function bestShiftCrack(trialsDict, crackLanguage, alphabet) {
 			tr.classList.add("active");
 		var td = tr.appendChild(document.createElement("td"));
 		td.textContent = item[0].toString();
-		
+
 		td = tr.appendChild(document.createElement("td"));
 		td.textContent = item[1].toFixed(3);
-		
+
 		td = tr.appendChild(document.createElement("td"));
 		var div = td.appendChild(document.createElement("div"));
 		div.classList.add("bar");
 		div.style.width = (item[1] / maxEntropy * 10 + 1).toFixed(6) + "em";
-		
+
 		td = tr.appendChild(document.createElement("td"));
 		td.textContent = trialsDict[item[0]];
 	});
 
-	window.scrollTo(0, document.body.scrollHeight);
-	
+	//window.scrollTo(0, document.body.scrollHeight); //scrolls down the page
+
 	// Decrypt using lowest entropy shift
 	var bestShift = entropies[0][0];
 	return bestShift;

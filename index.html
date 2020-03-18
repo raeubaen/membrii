@@ -20,6 +20,16 @@
     <!-- Script -->
     {% load static %}
     <script async src="dist/script/cryptii.js " data-cryptii-init></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script> 
+      $(window).scroll(function (event) {
+        var scroll = $(window).scrollTop();
+        let arrow = document.getElementById("bouncing-arrow")
+        if (arrow !== null)
+          arrow.style.visibility = "hidden"
+        // Do something
+      });
+    </script>
     <!--
     <script type="application/json" data-cryptii-config>
       {
@@ -47,20 +57,18 @@
   </head>
   <body>
 
-    <div class="app">
+    <div class="app" id="app">
 
-	<header class="app__header header">
-	</header>
+      <header class="app__header header">
+      </header>
 
       <article class="app__pipe pipe">
-        <header class="pipe__header">
-         
-        </header>
+        <header class="pipe__header"></header>
         <div class="pipe__scrollable"></div>
       </article>
 
-      <div id="crack-results">
-      </div>
+      <div id="crack-results"></div>
+
     </div>
 
   </body>
