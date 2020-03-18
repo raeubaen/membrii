@@ -167,11 +167,11 @@ export default class CaesarCipherEncoder extends Encoder {
     if (this.getSettingValue('crack') & !isEncode) {
       language = this.getSettingValue('language');
       trialsDict = {}
-      alph_len = language == "english" ? 26 : 21;
-      for (var i=0; i<alph_len; i++) {
+      alphabet = this.getSettingValue('alphabet')._string
+      for (var i=0; i<alphabet.length; i++) {
         trialsDict[i] = this._performTranslate(content, isEncode, i).slice(0, 20)
       }
-      bestShift = bestShiftCrack(content, language, trialsDict);
+      bestShift = bestShiftCrack(trialsDict, language, alphabet);
       this.getSetting('shift').setValue(bestShift)
     }
     return this._performTranslate(content, isEncode)

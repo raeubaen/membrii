@@ -1,8 +1,5 @@
 var entropies;
 
-let italian_alphabet = "abcdefghilmnopqrstuvz"
-let english_alphabet = "abcdefghijklmnopqrstuvwxyz"
-
 function stringFromCodeArray(array) {
 	str = ""
 	for (var i=0; i<array.length; i++){
@@ -11,14 +8,14 @@ function stringFromCodeArray(array) {
 	return str
 }
 
-export function bestShiftCrack(trialsDict, language) {
+export function bestShiftCrack(trialsDict, language, alphabet) {
 
-	alph_len = language == "english" ? 26 : 21;
-	for (var i=0; i<alph_len; i++) {
+
+	for (var i=0; i<alphabet.length; i++) {
 		trialsDict[i] = stringFromCodeArray(trialsDict[i])
 	}
 
-	entropies = getAllEntropies(trialsDict, language);
+	entropies = getAllEntropies(trialsDict, language, alphabet);
 	entropies.sort(function(x, y) {
 		// Compare by lowest entropy, break ties by lowest shift
 		if (x[1] != y[1])
@@ -57,7 +54,7 @@ export function bestShiftCrack(trialsDict, language) {
 		td = tr.appendChild(document.createElement("td"));
 		var div = td.appendChild(document.createElement("div"));
 		div.classList.add("bar");
-		div.style.width = ((item[1] - minEntropy) / maxEntropy * 30 + 1).toFixed(6) + "em";
+		div.style.width = (item[1] / maxEntropy * 10 + 1).toFixed(6) + "em";
 		
 		td = tr.appendChild(document.createElement("td"));
 		td.textContent = trialsDict[item[0]];
@@ -82,17 +79,13 @@ var ITALIAN_FREQS = [
 ];
 
 // Returns the cross-entropy of the given string with respect to the unigram frequencies, which is a positive floating-point number.
-function getEntropy(str, language) {
+function getEntropy(str, language, alphabet) {
 	var sum = 0;
 	var ignored = 0;
-	if (language == 'english'){
+	if (language == 'english')
 		var FREQS = ENGLISH_FREQS
-		var alphabet = english_alphabet
-	}
-	else if (language == 'italian'){
+	else if (language == 'italian')
 		var FREQS = ITALIAN_FREQS
-		var alphabet = italian_alphabet
-	}
 	//it is due to the programmer not having language different from english or italian
 	for (var i = 0; i < str.length; i++) {
 		var c = str[i].toLowerCase();
@@ -110,10 +103,9 @@ function getEntropy(str, language) {
 
 // Returns the entropies when the given string is decrypted with all 26 possible shifts,
 // where the result is an array of pairs (int shift, float entropy) - e.g. [[0, 2.01], [1, 4.95], ..., [25, 3.73]].
-function getAllEntropies(trialsDict, language) {
-	alph_len = language == "english" ? 26 : 21;
+function getAllEntropies(trialsDict, language, alphabet) {
 	var result = [];
-	for (var i=0; i < alph_len; i++)
-		result.push([i, getEntropy(trialsDict[i], language)]);
+	for (var i=0; i < alphabet.length; i++)
+		result.push([i, getEntropy(trialsDict[i], language, alphabet)]);
 	return result;
 }
