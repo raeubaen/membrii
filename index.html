@@ -24,10 +24,12 @@
     <script> 
       $(window).scroll(function (event) {
         var scroll = $(window).scrollTop();
-        let arrow = document.getElementById("bouncing-arrow")
-        if (arrow !== null)
-          arrow.style.visibility = "hidden"
-        // Do something
+        if (scroll > 100){
+          let arrow = document.getElementById("bouncing-arrow")
+          if (arrow !== null)
+            arrow.style.visibility = "hidden"
+          // Do something
+        }
       });
     </script>
     <!--

@@ -53,7 +53,7 @@ export default class CaesarCipherEncoder extends Encoder {
       },
       {
         name: 'crackLanguage',
-        label: 'Written in',
+        label: 'Crack from',
         type: 'enum',
         value: 'english',
         elements: ['english', 'italian'],
@@ -228,7 +228,7 @@ export default class CaesarCipherEncoder extends Encoder {
             arrow = document.createElement("div")
             arrow.classList.add("arrow", "bounce")
             arrow.id = "bouncing-arrow"
-	    arrow.style.visibility = "visible"
+	          arrow.style.visibility = "visible"
             pipe__scrollable.appendChild(arrow)
           }
           else {

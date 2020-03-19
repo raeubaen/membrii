@@ -60,6 +60,12 @@ export default class Form extends Viewable {
     return this
   }
 
+  removeFields (fieldsOrSpecs) {
+    console.log("in removeFields")
+    fieldsOrSpecs.forEach(this.removeField.bind(this))
+    return this
+  }
+
   /**
    * Returns field instance for given name.
    * @param {string} name Field name
