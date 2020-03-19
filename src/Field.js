@@ -158,7 +158,11 @@ export default class Field extends Viewable {
     return this
   }
 
-  /**
+  unsetDelegate () {
+    this._delegate = null
+    return this
+  }
+/**
    * Returns true, if the value is valid.
    * @return {boolean} True, if valid
    */

@@ -3,6 +3,17 @@ import Encoder from '../Encoder'
 import MathUtil from '../MathUtil'
 import {bestShiftCrack} from './CaesarBreaker'
 
+const crackSetting = {
+  name: 'crackSetting',
+  label: 'Crack',
+  type: 'enum',
+  value: 'no',
+  elements: ['no', 'english', 'italian'],
+  labels: ['No', 'from english', 'from italian'],
+  width: 8,
+  randomizable: false
+}
+
 const meta = {
   name: 'caesar-cipher',
   title: 'Caesar cipher',
@@ -31,77 +42,59 @@ export default class CaesarCipherEncoder extends Encoder {
    */
   constructor () {
     super()
-    this.addSettings([
-      {
-        name: 'shift',
-        type: 'number',
-        label: 'Shift',
-        priority: 10,
-        value: defaultShift,
-        integer: true,
-        describeValue: this.describeShiftValue.bind(this),
-        randomizeValue: this.randomizeShiftValue.bind(this)
-      },
-      {
-        name: 'crack',
-        type: 'boolean',
-        label: 'Need Crack (only in decoding)',
-        value: false,
-        trueLabel: 'Yes',
-        falseLabel: 'No',
-        randomizable: false
-      },
-      {
-        name: 'crackLanguage',
-        label: 'Crack from',
-        type: 'enum',
-        value: 'english',
-        elements: ['english', 'italian'],
-        labels: ['English', 'Italian'],
-        width: 4,
-        randomizable: false
-      },
-
-      {
-        name: 'language',
-        label: 'Ciphertext Alphabet',
-        type: 'enum',
-        value: 'english',
-        elements: ['english', 'italian', 'other'],
-        labels: ['English', 'Italian', 'Other'],
-        blackChoiceList: [],
-        width: 8,
-        randomizable: false
-      },
-      {
-        name: 'alphabet',
-        type: 'text',
-        value: englishAlphabet,
-        uniqueChars: true,
-        minLength: 2,
-        caseSensitivity: false,
-        randomizable: false
-      },
-      {
-        name: 'caseStrategy',
-        type: 'enum',
-        value: 'maintain',
-        elements: ['maintain', 'ignore', 'strict'],
-        labels: ['Maintain case', 'Ignore case', 'Strict (A ≠ a)'],
-        width: 6,
-        randomizable: false
-      },
-      {
-        name: 'includeForeignChars',
-        type: 'boolean',
-        label: 'Foreign Chars',
-        width: 6,
-        value: true,
-        trueLabel: 'Include',
-        falseLabel: 'Ignore',
-        randomizable: false
-      }
-    ])
+    this.addSettings(
+      [
+        {
+          name: 'shift',
+          type: 'number',
+          label: 'Shift',
+          priority: 10,
+          value: defaultShift,
+          integer: true,
+          describeValue: this.describeShiftValue.bind(this),
+          randomizeValue: this.randomizeShiftValue.bind(this)
+        },      
+        {
+          name: 'language',
+          label: 'Ciphertext Alphabet',
+          type: 'enum',
+          value: 'english',
+          elements: ['english', 'italian', 'other'],
+          labels: ['English', 'Italian', 'Other'],
+          blackChoiceList: [],
+          width: 8,
+          randomizable: false
+        },
+        {
+          name: 'alphabet',
+          type: 'text',
+          value: englishAlphabet,
+          uniqueChars: true,
+          minLength: 2,
+          caseSensitivity: false,
+          randomizable: false
+        },
+        {
+          name: 'caseStrategy',
+          type: 'enum',
+          value: 'maintain',
+          elements: ['maintain', 'ignore', 'strict'],
+          labels: ['Maintain case', 'Ignore case', 'Strict (A ≠ a)'],
+          width: 6,
+          randomizable: false
+        },
+        {
+          name: 'includeForeignChars',
+          type: 'boolean',
+          label: 'Foreign Chars',
+          width: 6,
+          value: true,
+          trueLabel: 'Include',
+          falseLabel: 'Ignore',
+          randomizable: false
+        }
+      ].concat(crackSetting)
+    )
   }
 
 
@@ -176,19 +169,28 @@ export default class CaesarCipherEncoder extends Encoder {
    * @return {number[]|string|Uint8Array|Chain} Resulting content
    */
   performTranslate (content, isEncode) {
-    let crack = this.getSettingValue('crack')
-    if (crack & !isEncode) {
-      crackLanguage = this.getSettingValue('crackLanguage');
-      trialsDict = {}
-      alphabet = this.getSettingValue('alphabet')._string
-      for (var i=0; i<alphabet.length; i++) {
-        trialsDict[i] = this._performTranslate(content, isEncode, i).slice(0, 40)
-      }
-      bestShift = bestShiftCrack(trialsDict, crackLanguage, alphabet);
-      this.setSettingValue('shift', bestShift)
+
+    let crackSettingFromThis = this.getSetting(crackSetting["name"])
+    if (!isEncode & (crackSettingFromThis == null)) {
+      this.addSetting(crackSetting)
     }
-    if (crack & isEncode)
-      this.setSettingValue('crack', false)
+    else if (isEncode & (crackSettingFromThis !== null)) {
+      this.removeSetting(crackSettingFromThis)
+    }
+
+    if (!isEncode) {
+      let crackSettingValue = this.getSettingValue(crackSetting["name"])
+      if (crackSettingValue != "no") {
+        let crackLanguage = crackSettingValue
+        let trialsDict = {}
+        let alphabet = this.getSettingValue('alphabet')._string
+        for (var i=0; i<alphabet.length; i++) {
+          trialsDict[i] = this._performTranslate(content, isEncode, i).slice(0, 40)
+        }
+        bestShift = bestShiftCrack(trialsDict, crackLanguage, alphabet);
+        this.setSettingValue('shift', bestShift)
+      }
+    }
     return this._performTranslate(content, isEncode)
   }
 
@@ -220,8 +222,8 @@ export default class CaesarCipherEncoder extends Encoder {
         }
         this.getSetting('shift').setNeedsValueDescriptionUpdate()
         break
-      case 'crack':
-        if (value) {
+      case crackSetting["name"]:
+        if (value != "no") {
           let arrow = document.getElementById("bouncing-arrow")
           if (arrow == undefined) {
             let pipe__scrollable = document.getElementsByClassName("pipe__scrollable")[0]

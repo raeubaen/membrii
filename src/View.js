@@ -214,11 +214,6 @@ export default class View {
     }
   }
 
-  removeSubviewForcing (view) {
-      view.setSuperview(null)
-      this.removeSubviewElement(view)
-  }
-
   /**
    * Removes previously added subview element from own DOM structure.
    * @protected

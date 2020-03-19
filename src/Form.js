@@ -60,8 +60,13 @@ export default class Form extends Viewable {
     return this
   }
 
+  /**
+   * Removes multiple fields from the form.
+   * @param {Field[]|object[]} fieldsOrSpecs Array of field instances or
+   * spec objects
+   * @return {Form} Fluent interface
+   */
   removeFields (fieldsOrSpecs) {
-    console.log("in removeFields")
     fieldsOrSpecs.forEach(this.removeField.bind(this))
     return this
   }
@@ -109,6 +114,46 @@ export default class Form extends Viewable {
     // Add field subview
     if (field.isVisible() && this.hasView()) {
       this.getView().addSubview(field.getView())
+    }
+
+    return this
+  }
+
+/**
+   * Removes a field from the form.
+   * @param {Field|object} fieldOrSpec Field instance or spec object
+   * @throws {Error} If field name is not already assigned.
+   * @return {Form} Fluent interface
+   */
+  removeField (fieldOrSpec) {
+    // Retrieve field instance
+    let field = fieldOrSpec
+    if (!(fieldOrSpec instanceof Field)) {
+      // Resolve field spec to field instance
+      const spec = fieldOrSpec
+      if (spec.priority === undefined) {
+        // Use default priority
+        spec.priority = this._calculateDefaultPriority()
+      }
+      // Let the factory create an instance from given spec
+      field = this.getFieldFactory().create(spec)
+    }
+
+    // Verify that given field name is already assigned
+    if (!this.getField(field.getName())) {
+      throw new Error(
+        `Field '${field.getName()}' is not assigned to the field.`)
+    }
+
+    // Add field instance to the form
+    let indexToRemove = this._fields.indexOf(field)
+    this._fields.splice(indexToRemove, 1)
+    field.unsetDelegate()
+    this._sortFields()
+
+    // Add field subview
+    if (field.isVisible() && this.hasView()) {
+      this.getView().removeSubview(field.getView())
     }
 
     return this

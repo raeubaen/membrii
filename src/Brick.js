@@ -144,6 +144,17 @@ export default class Brick extends Viewable {
   }
 
   /**
+   * Removes multiple setting fields from the brick.
+   * @param {Field[]|object[]} fieldsOrSpecs Array of field instances or
+   * spec objects
+   * @return {Brick} Fluent interface
+   */
+  removeSettings (fieldsOrSpecs) {
+    this._settingsForm.removeFields(fieldsOrSpecs)
+    return this
+  }
+
+  /**
    * Convenience method for returning the setting field for given name.
    * @param {string} name Setting name
    * @return {?Setting} Setting field or null, if it does not exist
@@ -160,6 +171,17 @@ export default class Brick extends Viewable {
    */
   addSetting (fieldOrSpec) {
     this._settingsForm.addField(fieldOrSpec)
+    return this
+  }
+
+ /**
+   * Convenience method for removing a setting field from the brick.
+   * @param {Field|object} fieldOrSpec Field instance or spec object
+   * @throws {Error} If field name is already assigned.
+   * @return {Brick} Fluent interface
+   */
+  removeSetting (fieldOrSpec) {
+    this._settingsForm.removeField(fieldOrSpec)
     return this
   }
 

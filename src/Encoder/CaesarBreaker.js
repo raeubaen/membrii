@@ -1,6 +1,6 @@
 
 function stringFromCodeArray(array) {
-	str = ""
+	let str = ""
 	for (var i=0; i<array.length; i++){
 	    str += String.fromCharCode(array[i])
 	}
