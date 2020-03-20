@@ -191,6 +191,12 @@ export default class CaesarCipherEncoder extends Encoder {
         this.setSettingValue('shift', bestShift)
       }
     }
+    else if (typeof(document) !== 'undefined') {
+      document.getElementById("crack-results").innerHTML = ""
+      let arrow = document.getElementById("bouncing-arrow")
+      if (arrow !== null)
+        arrow.style.visibility = "hidden"
+    }
     return this._performTranslate(content, isEncode)
   }
 
