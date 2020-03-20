@@ -22,6 +22,7 @@ import EnigmaEncoder from '../Encoder/Enigma'
 import HashEncoder from '../Encoder/Hash'
 import HMACEncoder from '../Encoder/HMAC'
 import IntegerEncoder from '../Encoder/Integer'
+import LettersToNumbersEncoder from '../Encoder/LettersToNumbers'
 import MorseCodeEncoder from '../Encoder/MorseCode'
 import NihilistCipherEncoder from '../Encoder/NihilistCipher'
 import NumeralSystemEncoder from '../Encoder/NumeralSystem'
@@ -34,6 +35,7 @@ import ReplaceEncoder from '../Encoder/Replace'
 import ReverseEncoder from '../Encoder/Reverse'
 import ROT13Encoder from '../Encoder/ROT13'
 import SpellingAlphabetEncoder from '../Encoder/SpellingAlphabet'
+import StressDeletionEncoder from '../Encoder/StressDeletion'
 import TapCodeEncoder from '../Encoder/TapCode'
 import TextViewer from '../Viewer/Text'
 import TrifidCipherEncoder from '../Encoder/TrifidCipher'
@@ -67,6 +69,7 @@ export default class BrickFactory extends Factory {
       CaseTransformEncoder,
       NumeralSystemEncoder,
       BitwiseOperationEncoder,
+      StressDeletionEncoder,
 
       // Alphabets
       MorseCodeEncoder,
@@ -101,7 +104,8 @@ export default class BrickFactory extends Factory {
       PunycodeEncoder,
       BootstringEncoder,
       IntegerEncoder,
-
+      LettersToNumbersEncoder,
+      
       // Modern cryptography
       BlockCipherEncoder,
       RC4Encoder,
