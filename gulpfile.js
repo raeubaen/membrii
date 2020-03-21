@@ -19,12 +19,12 @@ const terser = require('gulp-terser')
 
 const meta = require('./package.json')
 const paths = {
-  assets: './assets',
-  script: './src',
+  assets: './node_source/assets',
+  script: './node_source/src',
   scriptDist: './static/script',
-  style: './style',
+  style: './node_source/style',
   styleDist: './static/style',
-  test: './test'
+  test: './node_source/test'
 }
 
 function composeVersion () {

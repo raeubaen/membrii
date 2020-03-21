@@ -1,3 +1,20 @@
+##info (membrii)
+Per aggiungere un nuovo cifrario va copiato un file
+tipo src/Encoder/CaesarCipher.js nella stessa cartella,
+modificato e rinominato senza sovrapporre nomi e label
+Nel file cambiare nome classe principale (uguale nome file)
+
+Poi in src/Factory/Brick.js aggiungere import alla classa dal file
+e in BrickFactory->invokables aggiungere la classe nel posto giusto
+(aiutarsi col contesto)
+
+la roba di Django non va toccata
+si può modificare index.html 
+o src - style (eseguendo npm run watch dopo)
+
+i template di django si aggiornano da soli
+(c'è un symbolic link a index.html in templates/)
+mentre gli staticfiles vengono direttamente presi da static/
 
 # cryptii
 
