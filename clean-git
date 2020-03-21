@@ -1,6 +1,6 @@
-export TO_REMOVE="dist/*"
+#export TO_REMOVE="dist/*"
 
-git filter-branch --tag-name-filter cat --index-filter 'git rm -r --cached --ignore-unmatch $TO_REMOVE' --prune-empty -f -- --all
+#git filter-branch --tag-name-filter cat --index-filter 'git rm -r --cached --ignore-unmatch $TO_REMOVE' --prune-empty -f -- --all
 
 rm -rf .git/refs/original
 
