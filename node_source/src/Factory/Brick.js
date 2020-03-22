@@ -14,6 +14,7 @@ import BaudotCodeEncoder from '../Encoder/BaudotCode'
 import BifidCipherEncoder from '../Encoder/BifidCipher'
 import BitwiseOperationEncoder from '../Encoder/BitwiseOperation'
 import BlockCipherEncoder from '../Encoder/BlockCipher'
+import BookCipherEncoder from '../Encoder/BookCipher'
 import BootstringEncoder from '../Encoder/Bootstring'
 import BytesViewer from '../Viewer/Bytes'
 import CaesarCipherEncoder from '../Encoder/CaesarCipher'
@@ -79,6 +80,7 @@ export default class BrickFactory extends Factory {
       EnigmaEncoder,
       CaesarCipherEncoder,
       AffineCipherEncoder,
+      BookCipherEncoder,
       ROT13Encoder,
       A1Z26Encoder,
       VigenereCipherEncoder,
