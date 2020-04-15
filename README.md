@@ -1,4 +1,15 @@
-##info (membrii)
+# roadmap (15/04/20)
+Scrivere encoder che toglie vie tutto
+tranne un set di caratteri prefissato
+(previo stress deletion)
+(vanno implementati molti alfabeti comunque)
+
+Aggiungere una bool setting in BookCipher 
+che chiami l'encoder di cui sopra.
+
+Finire l'implementazione di tutto il resto del Book Cipher
+
+## info (membrii)
 Per aggiungere un nuovo cifrario va copiato un file
 tipo src/Encoder/CaesarCipher.js nella stessa cartella,
 modificato e rinominato senza sovrapporre nomi e label

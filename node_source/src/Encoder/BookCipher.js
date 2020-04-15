@@ -2,7 +2,7 @@
 import Encoder from '../Encoder'
 import Chain from '../Chain'
 import StringUtil from '../StringUtil'
-
+import StressDeletionEncoder from './StressDeletion'
 const meta = {
   name: 'book-cipher',
   title: 'Book Cipher',
@@ -42,18 +42,18 @@ export default class BookCipherEncoder extends Encoder {
         labels: ['Letters', 'Words', 'Rows'],
       },
       {
-        name: 'take',
-        type: 'enum',
-        value: 'all',
-        elements: ['all', 'first', 'last'],
-        labels: ['All', 'First', 'Last'],
-      },
-      {
         name: 'return',
         type: 'enum',
         value: 'letters',
         elements: ['letters', 'words'],
         labels: ['Letters', 'Words'],
+      },
+      {
+        name: 'take',
+        type: 'enum',
+        value: 'all',
+        elements: ['all', 'first', 'last'],
+        labels: ['All', 'First', 'Last'],
       },
       {
         name: 'separator',
@@ -74,7 +74,11 @@ export default class BookCipherEncoder extends Encoder {
    * @return {number[]|string|Uint8Array|Chain} Resulting content 
    */
   performTranslate (content, isEncode) {
-    //content = new Chain(StressDeletionEncoder.performTranslate(content, true)) //
+    //works as example; real task shall be to remove all non-alphabet characters, except newline
+    StressDeletionEncoderInstance = new StressDeletionEncoder()
+    content = new Chain(StressDeletionEncoderInstance.performTranslate(content, true))
+
+
     let numbersString = this.getSettingValue('numbers')._string
     let numbers = []
     numbersString.replace(/(\d+)/g, (match, rawNumber, offset) => {
@@ -86,17 +90,21 @@ export default class BookCipherEncoder extends Encoder {
         // Ignore numbers having adjacent characters
         numbers.push(parseInt(rawNumber))
     })
+
+
     let codePoints = []
     for (let i=0; i<numbers.length; i++) {
       if ((numbers[i]-1)<content.getLength())
       codePoints.push(content.getCodePointAt(numbers[i]-1))
     }
+    /*
     str = content.getString()
     for (let i=0; i<str.length; i++){
       if (str[i] === "\n") {
         console.log("detected newline after "+str[i-3]+str[i-2]+str[i-1])
       }
     }
+    */
     return codePoints
   }
 
