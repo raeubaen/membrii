@@ -29,12 +29,14 @@ import NihilistCipherEncoder from '../Encoder/NihilistCipher'
 import NumeralSystemEncoder from '../Encoder/NumeralSystem'
 import PunchedTapeViewer from '../Viewer/PunchedTape'
 import PolybiusSquareEncoder from '../Encoder/PolybiusSquare'
+import PunctuationDeletionEncoder from '../Encoder/PunctuationDeletion'
 import PunycodeEncoder from '../Encoder/Punycode'
 import RailFenceCipherEncoder from '../Encoder/RailFenceCipher'
 import RC4Encoder from '../Encoder/RC4'
 import ReplaceEncoder from '../Encoder/Replace'
 import ReverseEncoder from '../Encoder/Reverse'
 import ROT13Encoder from '../Encoder/ROT13'
+import SpaceDeletionEncoder from '../Encoder/SpaceDeletion'
 import SpellingAlphabetEncoder from '../Encoder/SpellingAlphabet'
 import StressDeletionEncoder from '../Encoder/StressDeletion'
 import TapCodeEncoder from '../Encoder/TapCode'
@@ -70,6 +72,8 @@ export default class BrickFactory extends Factory {
       CaseTransformEncoder,
       NumeralSystemEncoder,
       BitwiseOperationEncoder,
+      SpaceDeletionEncoder,
+      PunctuationDeletionEncoder,
       StressDeletionEncoder,
 
       // Alphabets

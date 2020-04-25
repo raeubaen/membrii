@@ -2,7 +2,9 @@
 import Encoder from '../Encoder'
 import Chain from '../Chain'
 import StringUtil from '../StringUtil'
-import StressDeletionEncoder from './StressDeletion'
+import PunctuationDeletionEncoder from './PunctuationDeletion'
+import SpaceDeletionEncoder from './SpaceDeletion'
+
 const meta = {
   name: 'book-cipher',
   title: 'Book Cipher',
@@ -33,27 +35,58 @@ export default class BookCipherEncoder extends Encoder {
         type: 'text',
         value: '1 11 21 31 41',
         minLength: 0,
+        width: 4,
       },
       {
-        name: 'count',
+        name: 'countIn',
+        label: 'Count In',
+        type: 'enum',
+        value: 'all',
+        elements: ['all', 'words', 'rows'],
+        labels: ['All text', 'Words', 'Rows'],
+        width: 8,
+      },
+      {
+        name: 'removeSpaces',
+        label: 'Remove Spaces',
+        type: 'boolean',
+        value: true,
+        trueLabel: "Yes",
+        falseLabel: "No",
+        width: 5,
+      },
+      {
+        name: 'removeSymbols',
+        label: 'Remove Punctuation',
+        type: 'boolean',
+        value: true,
+        trueLabel: "Yes",
+        falseLabel: "No",
+        width: 7,
+      },
+      {
+        name: 'toCount',
         type: 'enum',
         value: 'letters',
         elements: ['letters', 'words', 'rows'],
         labels: ['Letters', 'Words', 'Rows'],
+        width: 4,
       },
       {
-        name: 'return',
+        name: 'toReturn',
         type: 'enum',
         value: 'letters',
         elements: ['letters', 'words'],
         labels: ['Letters', 'Words'],
+        width: 4,
       },
       {
-        name: 'take',
+        name: 'toTake',
         type: 'enum',
         value: 'all',
         elements: ['all', 'first', 'last'],
         labels: ['All', 'First', 'Last'],
+        width: 4,
       },
       {
         name: 'separator',
@@ -74,10 +107,25 @@ export default class BookCipherEncoder extends Encoder {
    * @return {number[]|string|Uint8Array|Chain} Resulting content 
    */
   performTranslate (content, isEncode) {
-    //works as example; real task shall be to remove all non-alphabet characters, except newline
-    StressDeletionEncoderInstance = new StressDeletionEncoder()
-    content = new Chain(StressDeletionEncoderInstance.performTranslate(content, true))
+    
+    const {toReturn, toCount, toTake, separator, countIn} = this.getSettingValues()
 
+    if(this.getSettingValue('removeSymbols')){
+      PunctuationDeletionEncoderInstance = new PunctuationDeletionEncoder()
+      content = new Chain(
+        PunctuationDeletionEncoderInstance.performTranslate(content, true)
+      )
+    }
+
+    if(this.getSettingValue('removeSpaces')){
+      if(toReturn == "words") throw Error("Cannot return words after having removed spaces...")
+      if(toCount == "words") throw Error("Cannot count words after having removed spaces...")
+
+      SpaceDeletionEncoderInstance = new SpaceDeletionEncoder()
+      content = new Chain(
+        SpaceDeletionEncoderInstance.performTranslate(content, true)
+      )
+    }
 
     let numbersString = this.getSettingValue('numbers')._string
     let numbers = []
@@ -90,12 +138,50 @@ export default class BookCipherEncoder extends Encoder {
         // Ignore numbers having adjacent characters
         numbers.push(parseInt(rawNumber))
     })
+    
+    string = content.getString()
+    if (countIn == "all"){
+      inString = string
+    }
+    else if (countIn  == "words"){
+      string = string.replace("\n", " ").replace(" +", " ")
+      countArray = string.split(" ") // split looking for one or multiple spaces
+    } else if (countIn  == "rows"){
+      countArray = string.split("\n") // split looking for one or multiple spaces
+    }
 
-
-    let codePoints = []
+    outString = ""
     for (let i=0; i<numbers.length; i++) {
-      if ((numbers[i]-1)<content.getLength())
-      codePoints.push(content.getCodePointAt(numbers[i]-1))
+      if (countIn !== "all"){
+        if (i>=countArray.length) break
+        inString = countArray[i]
+      }
+
+      if (toCount  == "letters"){
+        inArray = inString
+      } else if (toCount  == "words"){
+        inString = inString.replace("\n", " ").replace(" +", " ")
+        inArray = inString.split(" ") // split looking for one or multiple spaces
+      } else if (toCount  == "rows"){
+        inArray = inString.split("\n") // split looking for one or multiple spaces
+      }
+
+      n = numbers[i] - 1
+      if (n >= inArray.length) break
+      else piece = inArray[n]
+
+      toSliceIndex = {"first": 0, "last": -1}
+      if (toTake !== "all"){
+        if (toReturn == "letters") 
+          pieceArray = piece
+        else if (toReturn == "words")
+          pieceArray = piece.split(" ")
+        
+        outString += pieceArray.slice(toSliceIndex[toTake])[0] + separator
+      }
+      else{
+        outString += piece + separator
+      }
     }
     /*
     str = content.getString()
@@ -105,7 +191,9 @@ export default class BookCipherEncoder extends Encoder {
       }
     }
     */
-    return codePoints
+
+    outChain = new Chain(outString)
+    return outChain.getCodePoints()
   }
 
   /**
