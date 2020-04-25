@@ -35,7 +35,7 @@ export default class BookCipherEncoder extends Encoder {
         type: 'text',
         value: '1 11 21 31 41',
         minLength: 0,
-        width: 4,
+        width: 8,
       },
       {
         name: 'countIn',
@@ -44,7 +44,7 @@ export default class BookCipherEncoder extends Encoder {
         value: 'all',
         elements: ['all', 'words', 'rows'],
         labels: ['All text', 'Words', 'Rows'],
-        width: 8,
+        width: 4,
       },
       {
         name: 'removeSpaces',
