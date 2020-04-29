@@ -31,7 +31,7 @@
       border: none;
       padding:
         $field-field-padding-v ($field-padding-h + 16px)
-        $field-field-padding-v $field-padding-h;
+        $field-field-padding-v ($field-padding-h - 4px);
       line-height: $field-field-height - $field-field-padding-v * 2;
       @extend %t-field-value;
       background: transparent;

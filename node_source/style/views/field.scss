@@ -13,8 +13,8 @@
     display: block;
     padding:
       $field-label-padding-v $field-label-padding-v
-      0 $field-padding-h;
-    border-right: 1px solid $c-line;
+      2px $field-padding-h;
+    // border-right: 1px solid $c-line;
     @extend %t-field-label;
     color: $c-field-label;
     align-self: flex-start;
