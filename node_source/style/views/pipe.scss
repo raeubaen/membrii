@@ -280,10 +280,10 @@ $header-height: 96px !default;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    border: 2px solid $c-black;
-    border-radius: 20px;
+    width: 46px;
+    height: 46px;
+    border: 2px solid $c-white;
+    border-radius: 23px;
     text-indent: -1000px;
     z-index: 1;
     opacity: 1;
@@ -298,9 +298,9 @@ $header-height: 96px !default;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 12px;
+      width: 18px;
       height: 2px;
-      background: $c-black;
+      background: $c-white;
     }
 
     &::after {
