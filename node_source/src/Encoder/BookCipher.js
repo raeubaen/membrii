@@ -13,7 +13,7 @@ const meta = {
 }
 
 /**
- * Encoder brick for Caesar Cipher encoding and decoding
+ * Encoder brick for Book Caesar Cipher encoding and decoding
  */
 export default class BookCipherEncoder extends Encoder {
   /**
@@ -32,6 +32,7 @@ export default class BookCipherEncoder extends Encoder {
     this.addSettings([
       {
         name: 'numbers',
+        label: 'Numbers (* for 1, 2, ...)',
         type: 'text',
         value: '1 11 21 31 41',
         minLength: 0,
@@ -127,18 +128,6 @@ export default class BookCipherEncoder extends Encoder {
       )
     }
 
-    let numbersString = this.getSettingValue('numbers')._string
-    let numbers = []
-    numbersString.replace(/(\d+)/g, (match, rawNumber, offset) => {
-      const alone =
-        (offset === 0 || StringUtil.isWhitespace(numbersString, offset - 1)) &&
-          (numbersString.length === offset + rawNumber.length ||
-            StringUtil.isWhitespace(numbersString, offset + rawNumber.length))
-      if (alone)
-        // Ignore numbers having adjacent characters
-        numbers.push(parseInt(rawNumber))
-    })
-    
     string = content.getString()
     if (countIn == "all"){
       inString = string
@@ -150,6 +139,28 @@ export default class BookCipherEncoder extends Encoder {
       countArray = string.split("\n") // split looking for one or multiple spaces
     }
 
+    let numbersString = this.getSettingValue('numbers')._string
+    if(numbersString === "*"){
+      if (typeof countArray !== 'undefined') 
+        len = countArray.length
+      else
+        len = inString.length
+      numbers = [...Array(len).keys()].map(x => x+1);
+    }
+    else{
+      numbers = []
+      numbersString.replace(/(\d+)/g, (match, rawNumber, offset) => {
+        const alone =
+          (offset === 0 || StringUtil.isWhitespace(numbersString, offset - 1)) &&
+            (numbersString.length === offset + rawNumber.length ||
+              StringUtil.isWhitespace(numbersString, offset + rawNumber.length))
+        if (alone)
+          // Ignore numbers having adjacent characters
+          numbers.push(parseInt(rawNumber))
+      })
+    }
+    console.log(numbers)
+    
     outString = ""
     for (let i=0; i<numbers.length; i++) {
       if (countIn !== "all"){
