@@ -288,7 +288,8 @@ $header-height: 96px !default;
     z-index: 1;
     opacity: 1;
     overflow: hidden;
-    background-image: url("https://membri-tool.herokuapp.com/static/logo.jpg");
+    background-image: url("../logo.jpg");
+    background-size: cover;
     &::before,
     &::after {
       content: '';
