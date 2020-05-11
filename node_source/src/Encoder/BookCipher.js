@@ -88,7 +88,7 @@ export default class BookCipherEncoder extends Encoder {
         elements: ['all', 'first', 'last'],
         labels: ['All', 'First', 'Last'],
         width: 4,
-      },
+     },
       {
         name: 'separator',
         label: 'Separated by',

@@ -19,6 +19,7 @@ import BootstringEncoder from '../Encoder/Bootstring'
 import BytesViewer from '../Viewer/Bytes'
 import CaesarCipherEncoder from '../Encoder/CaesarCipher'
 import CaseTransformEncoder from '../Encoder/CaseTransform'
+import ChemicalElementsEncoder from '../Encoder/ChemicalElements'
 import EnigmaEncoder from '../Encoder/Enigma'
 import HashEncoder from '../Encoder/Hash'
 import HMACEncoder from '../Encoder/HMAC'
@@ -111,7 +112,7 @@ export default class BrickFactory extends Factory {
       BootstringEncoder,
       IntegerEncoder,
       LettersToNumbersEncoder,
-      
+      ChemicalElementsEncoder,
       // Modern cryptography
       BlockCipherEncoder,
       RC4Encoder,
