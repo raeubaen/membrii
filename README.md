@@ -27,6 +27,7 @@ i template di django si aggiornano da soli
 (c'è un symbolic link a index.html in templates/)
 mentre gli staticfiles vengono direttamente presi da static/
 
+FORKED FROM
 # cryptii
 
 [![Build Status](https://travis-ci.org/cryptii/cryptii.svg?branch=dev)](https://travis-ci.org/cryptii/cryptii)
