@@ -42,8 +42,18 @@ export default class ChemicalElementsEncoder extends Encoder {
           label: 'return',
           type: 'enum',
           value: 'symbols',
-          elements: ['symbols', 'englishNames', 'italianNames'],
-          labels: ['Symbols', 'English names', 'Italian names'],
+          elements: ['numbers', 'symbols', 'englishNames', 'italianNames'],
+          labels: ['Numbers', 'Symbols', 'English names', 'Italian names'],
+          width: 8,
+          randomizable: false
+        },
+        {
+          name: 'toStart',
+          label: 'start',
+          type: 'enum',
+          value: 'numbers',
+          elements: ['numbers', 'symbols', 'englishNames', 'italianNames'],
+          labels: ['Numbers', 'Symbols', 'English names', 'Italian names'],
           width: 8,
           randomizable: false
         },
@@ -69,37 +79,49 @@ export default class ChemicalElementsEncoder extends Encoder {
    * @param {integer} trialShift trial shift - optional
    * @return {number[]|string|Uint8Array|Chain} Resulting content 
    */
-  performTranslate (content, isEncode) {
-    contentString = content.getString()
-    numbers = []
+  performTranslate(content, isEncode) {
+    const { toStart, toReturn, separator } = this.getSettingValues();
+    const contentString = content.getString();
 
-    outString = ""
-    const {toReturn, separator} = this.getSettingValues()
+    // Determine the actual mapping direction
+    const from = isEncode ? toStart : toReturn;
+    const to = isEncode ? toReturn : toStart;
 
-    contentString.replace(/(\d+|[a-zA-Z]+)/g, (match) => {
-      match.replace(/\d+/g, (numberLiteral) => {
-        // Ignore numbers having adjacent characters
-        number = parseInt(numberLiteral)
-        if (number != 0){
-          if (toReturn==="symbols"){
-            chemElement = symbols[number-1]
-          }
-          else if (toReturn==="englishNames"){
-            chemElement = englishNames[number-1]
-          }
-          else if (toReturn==="italianNames"){
-            chemElement = italianNames[number-1]
-          }
-          outString += chemElement + separator
-        }
-      })
-      match.replace(/[a-zA-Z]+/g, (letters) => {
-          outString += letters + separator
-      })
-    })
+    // Function to map a single token from `from` to `to`
+    function mapToken(token) {
+      let index = -1;
 
-    outChain = new Chain(outString)
-    return outChain.getCodePoints()
+      // Determine index of token in the `from` set
+      if (from === "numbers") {
+        index = parseInt(token) - 1;
+      } else if (from === "symbols") {
+        index = symbols.indexOf(token);
+      } else if (from === "englishNames") {
+        index = englishNames.indexOf(token);
+      } else if (from === "italianNames") {
+        index = italianNames.indexOf(token);
+      }
+
+      // If token is not recognized, keep it as-is
+      if (index < 0) return token;
+
+      // Map to the `to` set
+      if (to === "numbers") return (index + 1).toString();
+      if (to === "symbols") return symbols[index];
+      if (to === "englishNames") return englishNames[index];
+      if (to === "italianNames") return italianNames[index];
+
+      return token;
+    }
+
+    // Split input by separator and map each token
+    const tokens = contentString.split(separator).map(mapToken);
+
+    const outChain = new Chain(tokens.join(separator));
+    return outChain.getCodePoints();
   }
+
+
+
 
 }

@@ -1,4 +1,3 @@
-
 import Encoder from '../Encoder'
 import Chain from '../Chain'
 import StringUtil from '../StringUtil'
@@ -66,6 +65,24 @@ export default class BookCipherEncoder extends Encoder {
         width: 7,
       },
       {
+        name: 'apostropheUnite',
+        label: 'Apostrophe unite words',
+        type: 'boolean',
+        value: false,
+        trueLabel: "No",
+        falseLabel: "Yes",
+        width: 7,
+      },
+       {
+        name: 'mergeContigousSpaces',
+        label: 'Merge contiguous spaces',
+        type: 'boolean',
+        value: false,
+        trueLabel: "Yes",
+        falseLabel: "No",
+        width: 7,
+      },
+      {
         name: 'toCount',
         type: 'enum',
         value: 'letters',
@@ -110,36 +127,50 @@ export default class BookCipherEncoder extends Encoder {
   performTranslate (content, isEncode) {
     
     const {toReturn, toCount, toTake, separator, countIn} = this.getSettingValues()
-
+    // Apostrophe unite words
+    if (this.getSettingValue('apostropheUnite')) {
+      let str = content.getString()
+      str = str.replace(/'/g, ' ')
+      content = new Chain(str)
+    }
     if(this.getSettingValue('removeSymbols')){
-      PunctuationDeletionEncoderInstance = new PunctuationDeletionEncoder()
+      let PunctuationDeletionEncoderInstance = new PunctuationDeletionEncoder()
       content = new Chain(
         PunctuationDeletionEncoderInstance.performTranslate(content, true)
       )
     }
-
+    if (this.getSettingValue('mergeContigousSpaces')) {
+      let str = content.getString()
+      str = str
+        .replace(/\s+/g, ' ')   // collapse all whitespace
+        .replace(/^ +| +$/g, '') // trim leading/trailing spaces
+      content = new Chain(str)
+    }
     if(this.getSettingValue('removeSpaces')){
       if(toReturn == "words") throw Error("Cannot return words after having removed spaces...")
       if(toCount == "words") throw Error("Cannot count words after having removed spaces...")
 
-      SpaceDeletionEncoderInstance = new SpaceDeletionEncoder()
+      let SpaceDeletionEncoderInstance = new SpaceDeletionEncoder()
       content = new Chain(
         SpaceDeletionEncoderInstance.performTranslate(content, true)
       )
     }
 
-    string = content.getString()
+    let string = content.getString();
+    let inString;
     if (countIn == "all"){
       inString = string
     }
     else if (countIn  == "words"){
       string = string.replace("\n", " ").replace(" +", " ")
-      countArray = string.split(" ") // split looking for one or multiple spaces
+      let countArray = string.split(" ") // split looking for one or multiple spaces
     } else if (countIn  == "rows"){
       countArray = string.split("\n") // split looking for one or multiple spaces
     }
 
+    let numbers;
     let numbersString = this.getSettingValue('numbers')._string
+    let len;
     if(numbersString === "*"){
       if (typeof countArray !== 'undefined') 
         len = countArray.length
@@ -161,13 +192,14 @@ export default class BookCipherEncoder extends Encoder {
     }
     console.log(numbers)
     
-    outString = ""
+    let outString = ""
     for (let i=0; i<numbers.length; i++) {
       if (countIn !== "all"){
         if (i>=countArray.length) break
         inString = countArray[i]
       }
 
+      let inArray;
       if (toCount  == "letters"){
         inArray = inString
       } else if (toCount  == "words"){
@@ -177,12 +209,14 @@ export default class BookCipherEncoder extends Encoder {
         inArray = inString.split("\n") // split looking for one or multiple spaces
       }
 
-      n = numbers[i] - 1
+      let n = numbers[i] - 1;
+      let piece;
       if (n >= inArray.length) break
       else piece = inArray[n]
 
-      toSliceIndex = {"first": 0, "last": -1}
+      let toSliceIndex = {"first": 0, "last": -1}
       if (toTake !== "all"){
+        let pieceArray;
         if (toReturn == "letters") 
           pieceArray = piece
         else if (toReturn == "words")
@@ -203,7 +237,7 @@ export default class BookCipherEncoder extends Encoder {
     }
     */
 
-    outChain = new Chain(outString)
+    let outChain = new Chain(outString)
     return outChain.getCodePoints()
   }
 

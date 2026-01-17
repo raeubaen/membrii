@@ -60,7 +60,7 @@ export default class StressDeletionEncoder extends Encoder {
    */
   performTranslate (content, isEncode) {
     let string = content.getString()
-    cleanString = string.replace(/è|é|à|á|ò|ó|í|ì|ù|ú|Á|À|È|É|Í|Ì|Ò|Ó|Ú|Ù/g, function(matched){
+    let cleanString = string.replace(/è|é|à|á|ò|ó|í|ì|ù|ú|Á|À|È|É|Í|Ì|Ò|Ó|Ú|Ù/g, function(matched){
       return mapToReplace[matched];
     });
     let cleanChain = new Chain(cleanString)

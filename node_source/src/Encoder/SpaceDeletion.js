@@ -37,7 +37,7 @@ export default class SpaceDeletionEncoder extends Encoder {
    */
   performTranslate (content, isEncode) {
     let string = content.getString()
-    cleanString = string.replace(
+    let cleanString = string.replace(
       / /g, 
       function(matched){
         return ""

@@ -79,7 +79,7 @@ export default class LettersToNumbersEncoder extends Encoder {
     let letterString = letterChain.toString()
     let numString = ""
     for (let i=0; i<letterChain.getLength(); i++) {
-      num = alphabet.indexOf(letterString[i])
+      let num = alphabet.indexOf(letterString[i])
       if (num !== -1)
         numString += num.toString() + " "
     }

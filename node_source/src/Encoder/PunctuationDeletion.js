@@ -51,11 +51,11 @@ export default class PunctuationDeletionEncoder extends Encoder {
    */
   performTranslate (content, isEncode) {
     let dirtyString = content.getString()
-    illegals = this.getSettingValue("illegals")._string
-    cleanString = ""
-    for(i=0; i<dirtyString.length; i++){
-      k = true
-      for(j=0; j<illegals.length; j++){    
+    let illegals = this.getSettingValue("illegals")._string
+    let cleanString = ""
+    for(let i=0; i<dirtyString.length; i++){
+      let k = true
+      for(let j=0; j<illegals.length; j++){    
         if(dirtyString[i] == illegals[j]) k = false
       }
       if(k) cleanString += dirtyString[i]

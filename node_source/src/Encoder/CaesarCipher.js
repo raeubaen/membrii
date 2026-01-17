@@ -187,7 +187,7 @@ export default class CaesarCipherEncoder extends Encoder {
         for (var i=0; i<alphabet.length; i++) {
           trialsDict[i] = this._performTranslate(content, isEncode, i).slice(0, 40)
         }
-        bestShift = bestShiftCrack(trialsDict, crackLanguage, alphabet);
+        let bestShift = bestShiftCrack(trialsDict, crackLanguage, alphabet);
         this.setSettingValue('shift', bestShift)
       }
     }

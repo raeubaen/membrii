@@ -11,12 +11,13 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 import sys
 import os
-import django_heroku
 import logging
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+DEFAULT_PORT = "8080"
 
 SESSION_SAVE_EVERY_REQUEST = True
 # Quick-start development settings - unsuitable for production
@@ -155,6 +156,4 @@ if os.path.isfile(dotenv_file):
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
-django_heroku.settings(locals())
-if DEBUG: del DATABASES['default']['OPTIONS']['sslmode']
 
